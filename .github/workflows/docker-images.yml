@@ -21,21 +21,14 @@ jobs:
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      
-    - name: test
-      run: pwd && ls
-      
         
     - name: Build the Docker image ==> Frontend
       working-directory: ./frontend
-      run: docker build . --tag todo-frontend:$(date +%s)
+      run: docker build . --tag jonathanschlitt/todo-frontend:$(date +%s)
       
     - name: Build the Docker image ==> Backend
       working-directory: ./backend
-      run: docker build . --tag todo-backend:$(date +%s)
-    
-    - name: seeImages
-      run: docker images
+      run: docker build . --tag jonathanschlitt/todo-backend:$(date +%s)
       
     - name: Docker Push ==> Frontend
       run: docker push jonathanschlitt/todo-frontend
