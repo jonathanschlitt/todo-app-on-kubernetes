@@ -20,7 +20,11 @@ jobs:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      
+    - name: test
+      run: pwd && ls
+      
         
     - name: Build the Docker image ==> Frontend
       run: docker build ./frontend --file Dockerfile --tag todo-frontend:$(date +%s)
