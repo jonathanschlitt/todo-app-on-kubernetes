@@ -33,6 +33,9 @@ jobs:
     - name: Build the Docker image ==> Backend
       working-directory: ./backend
       run: docker build . --tag todo-backend:$(date +%s)
+    
+    - name: seeImages
+      run: docker images
       
     - name: Docker Push ==> Frontend
       run: docker push jonathanschlitt/todo-frontend
