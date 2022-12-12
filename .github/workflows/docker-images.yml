@@ -28,11 +28,11 @@ jobs:
         
     - name: Build the Docker image ==> Frontend
       working-directory: ./frontend
-      run: docker build --file Dockerfile --tag todo-frontend:$(date +%s)
+      run: docker build . --tag todo-frontend:$(date +%s)
       
     - name: Build the Docker image ==> Backend
       working-directory: ./backend
-      run: docker build --file Dockerfile --tag todo-backend:$(date +%s)
+      run: docker build . --tag todo-backend:$(date +%s)
       
     - name: Docker Push ==> Frontend
       run: docker push jonathanschlitt/todo-frontend
