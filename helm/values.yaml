@@ -1,0 +1,27 @@
+apps:
+  nodeapp:
+    name: todo-backend-app-deploy
+    repository: jonathanschlitt/todo-backend
+    tag: 'latest'
+    replicaCount: 3
+  reactapp:
+    name: todo-frontend-app-deploy
+    repository: jonathanschlitt/todo-frontend
+    tag: 'latest'
+    replicaCount: 3
+    backendUrl: "http://add-loadbalancer-ip-here"
+  pullPolicy: Always
+
+service:
+  reactapp:
+    name: todo-frontend-service
+    type: LoadBalancer
+    protocol: TCP
+    externalPort: 80
+    internalPort: 8888
+  nodeapp:
+    name: todo-backend-service
+    type: LoadBalancer
+    protocol: TCP
+    externalPort: 80
+    internalPort: 7777

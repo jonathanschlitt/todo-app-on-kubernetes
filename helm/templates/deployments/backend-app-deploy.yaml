@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apps.nodeapp.name }}
+  labels:
+    app: {{ template "nodeapp.name" . }}
+    chart: {{ template "nodeapp.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.apps.nodeapp.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "nodeapp.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "nodeapp.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - image: {{ .Values.apps.nodeapp.repository }}:{{ .Values.apps.nodeapp.tag }}
+        name: {{ .Chart.Name }}
+        ports:
+        - containerPort: {{ .Values.service.nodeapp.internalPort }}
+        imagePullPolicy: {{ .Values.apps.pullPolicy }}
+
+        env:          
+          - name: USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  db_username
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  db_password
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  db_name
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  db_host
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  db_port
+          - name: SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  secret
+          - name: PORT
+            value: {{ .Values.service.nodeapp.internalPort | quote }}
+    
+
+
+       
