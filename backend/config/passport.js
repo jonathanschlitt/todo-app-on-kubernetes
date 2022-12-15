@@ -2,6 +2,8 @@ const JwtSrategy = require('passport-jwt').Strategy;
 
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
+const userRepository = require("../repository/userRepository");
+
 const key = process.env.SECRET;
 
 const opts = {};
@@ -12,6 +14,7 @@ opts.secretOrKey = key;
 
 const findUser = async (jwt_payload_id) => {
   try {
+      return await userRepository.getUserById(jwt_payload_id)
   } catch (error) {}
 };
 

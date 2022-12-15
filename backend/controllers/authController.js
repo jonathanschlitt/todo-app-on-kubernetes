@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const key = process.env.SECRET;
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
+const userRepository = require("../repository/userRepository");
 
 // Creating a JWT
 // max age in seconds
@@ -10,92 +10,92 @@ const maxAge = 3 * 24 * 60 * 60;
 
 // creating a token
 const createToken = (payload) => {
-  return jwt.sign(payload, key, {
-    expiresIn: maxAge,
-  });
+    return jwt.sign(payload, key, {
+        expiresIn: maxAge,
+    });
 };
 
+
 signup_post = async (req, res) => {
-  const { surname, lastname, email, password } = req.body;
+    const {surname, lastname, email, password} = req.body;
+    console.log("signup_post called with: surname[" + surname + "] lastname[" + lastname + "] email [" + email + "] password[" + password + "]")
 
-  // const checkUser = await User.findOne({ email: email });
 
-  // if (checkUser) {
-  //   res.status(400);
-  //   throw new Error('This email is already registered.');
-  // }
 
-  // const userData = { surname, lastname, email, password };
+    let userExists = await userRepository.userExists(email)
+    if (userExists) {
+        console.log("Email could not be found in Database!")
+        res.status(401);
+        throw new Error(
+            `The email address ${email} is already associated with an account. Please check and try again!`
+        );
+    }
 
-  // const salt = await bcrypt.genSalt();
+    if (userExists) {
+      res.status(400);
+      throw new Error('This email is already registered.');
+    }
 
-  // userData.password = await bcrypt.hash(userData.password, salt);
+    let pwHsh = await bcrypt.hash(password, process.env.SALT)
+    userRepository.insertUser(surname, lastname, email, pwHsh).then(
+        user => {
 
-  // const user = await User.create(userData);
-
-  // if (user) {
-  //   // generate token and save
-  //   // var token = await new Token({
-  //   //   _userId: user._id,
-  //   //   value: crypto.randomBytes(16).toString('hex'),
-  //   // });
-
-  //   // const tokenSuccess = await token.save();
-
-  //   // if (tokenSuccess) {
-  //   //   await emailVerification(user, token);
-
-  //   //   res.status(200).json({
-  //   //     message: `A verification email has been sent to ${user.email}. It will be expire after one day. If you not get verification Email click on resend token.`,
-  //   //   });
-  //   // } else {
-  //   //   res.status(500);
-  //   //   throw new Error('Error creating verification token.');
-  //   // }
-  res.status(201).json({ message: 'User has been created!' });
-  // } else {
-  //   res.status(500);
-  //   throw new Error('Error creating new user.');
-  // }
+            const payload = {
+                email: email,
+            };
+            createToken(payload)
+            //   await emailVerification(user, token);
+            //   res.status(200).json({
+            //   //     message: `A verification email has been sent to ${user.email}. It will be expire after one day. If you not get verification Email click on resend token.`,
+            //   //   });
+            res.status(200).json({message: 'User ' + user.uuid + " " + user.email + ' has been created!'});
+        },
+        error => {
+            res.status().json({message: 'Error: ' + error});
+        }
+    )
 };
 
 login_post = async (req, res) => {
-  let { email, password } = req.body;
+    let {email, password} = req.body;
+    let pwHsh = await bcrypt.hash(password, process.env.SALT)
 
-  const data = {
-    email: 'test@todoapp.com',
-    password: '$2b$10$0lsHmHx7lUOJ6XZqG.WVqupwGWV60WxZT30xrKepYZy3497UZVefi',
-  };
+    console.log("LOGIN: user[" + email + "] " + new Date())
 
-  let userFromDB = undefined;
 
-  email === data.email ? (userFromDB = data) : (userFromDB = null);
+    let userExists = await userRepository.userExists(email)
 
-  // const user = await User.findOne({ email });
+    if (!userExists) {
+        console.log("Email could not be found in Database!")
+        res.status(401);
+        throw new Error(
+            `The email address ${email} is not associated with any account. Please check and try again!`
+        );
+    }
 
-  if (!userFromDB) {
-    res.status(401);
-    throw new Error(
-      `The email address ${email} is not associated with any account. Please check and try again!`
-    );
-  }
+    let user = await userRepository.getUser(email, pwHsh)
+        // .then(
+        //     user => {
+        //         console.log("user: " + user)
+        //         },
+        //     )
+        // .catch(
+        //     (err) => {
+        //         res.status(500).json({message: 'Error: ' + err});
+        //     }
+        // )
 
-  // comapre user's password if user is find in above step
-  if (bcrypt.compareSync(password, userFromDB.password) === false) {
-    res.status(401);
-    throw new Error('Wrong Password!');
-  }
+    const payload = {
+        id : user.id,
+        email: user.email,
+    };
 
-  const payload = {
-    email: userFromDB.email,
-  };
+    const token = createToken(payload);
 
-  const token = createToken(payload);
-
-  res.status(200).json({ token: `Bearer ${token}` });
+    res.status(200).json({token: `Bearer ${token}`});
 };
 
 module.exports = {
-  signup_post,
-  login_post,
+    signup_post,
+    login_post,
 };

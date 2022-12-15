@@ -1,26 +1,76 @@
+const jwt = require('jsonwebtoken');
+const todoRepository = require("../repository/todoRepository");
+const env = require('dotenv').config();
+
 addTodoItem_post = async (req, res) => {
-  let { name, description, active, showDetails, deadline } = req.body;
+  let {name, description, active, showDetails, deadline } = req.body;
 
-  const todoItem = {
-    name,
-    description,
-    deadline,
-    active,
-    showDetails,
-    _id: '99999999999',
-  };
+  let user = await req.user
 
-  const newsItemCreated = true;
+  if (user !== undefined && user != null) {
+    console.log(active)
+    console.log(showDetails)
+    todoRepository.insertToDo(user.id, name, description, active, showDetails, deadline)
+        .then(
+          todoId => {
+            console.log(todoId)
+            return res.status(200).json(
+                {
+                  _id: todoId.toString(),
+                  name: name,
+                  description: description,
+                  deadline: deadline,
+                  active: active,
+                  showDetails: showDetails
+                }
+            )
+          }
 
-  if (newsItemCreated) {
-    res.status(200).json(todoItem);
+        )
+        .catch(
+            err => {
+              console.log(err)
+              return res.status(500).send({
+                success: false,
+                message: 'Internal Server error!'
+              })
+            }
+        )
   } else {
-    res.status(500);
-    throw new Error('Error creating todoItem!');
+
+    // if there is no token
+    // return an error
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    });
   }
+
+
+  //
+  // if (newsItemCreated) {
+  //   res.status(200).json(todoItem);
+  // } else {
+  //   res.status(500);
+  //   throw new Error('Error creating todoItem!');
+  // }
 };
 
 todoItems_get = async (req, res) => {
+
+  let user = await req.user
+
+  if (user === undefined || user == null) {
+    return res.status(401).send({
+      success: false,
+      message: 'Unauthorized!'
+    })
+  }
+
+  let todos = await todoRepository.getToDos(user.id)
+
+  console.log(todos)
+
   res.status(200).json([
     {
       _id: 1,
