@@ -20,26 +20,18 @@ signup_post = async (req, res) => {
     const {surname, lastname, email, password} = req.body;
     console.log("signup_post called with: surname[" + surname + "] lastname[" + lastname + "] email [" + email + "] password[" + password + "]")
 
-
-
     let userExists = await userRepository.userExists(email)
     if (userExists) {
-        console.log("Email could not be found in Database!")
-        res.status(401);
+        console.log('This email is already registered.')
+        res.status(400);
         throw new Error(
             `The email address ${email} is already associated with an account. Please check and try again!`
         );
     }
 
-    if (userExists) {
-      res.status(400);
-      throw new Error('This email is already registered.');
-    }
-
     let pwHsh = await bcrypt.hash(password, process.env.SALT)
     userRepository.insertUser(surname, lastname, email, pwHsh).then(
         user => {
-
             const payload = {
                 email: email,
             };
@@ -51,6 +43,7 @@ signup_post = async (req, res) => {
             res.status(200).json({message: 'User ' + user.uuid + " " + user.email + ' has been created!'});
         },
         error => {
+            console.log(error)
             res.status().json({message: 'Error: ' + error});
         }
     )

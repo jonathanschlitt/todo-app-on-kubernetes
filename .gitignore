@@ -148,3 +148,8 @@ Thumbs.db
 *.rest
 
 *.svg
+/.idea/jsLibraryMappings.xml
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/todo-app-on-kubernetes.iml
+/.idea/vcs.xml

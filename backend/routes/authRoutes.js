@@ -5,7 +5,7 @@ const passport = require('passport');
 
 const router = express.Router();
 
-// router.post('/signup', authController.signup_post);
+router.post('/signup', authController.signup_post);
 
 router.post('/login', authController.login_post);
 

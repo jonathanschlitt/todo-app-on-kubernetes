@@ -1,6 +1,6 @@
 const {cassandraClient} = require("../config/db");
 
-const INSERT_USER_QUERY = 'INSERT INTO user (uuid, surname, lastname, email, password) VALUES (uuid(), ?, ?, ?, ?)'
+const INSERT_USER_QUERY = 'INSERT INTO user (id, surname, lastname, email, password) VALUES (uuid(), ?, ?, ?, ?)'
 const UPDATE_USER_QUERY = 'UPDATE user SET surname=?, lastname=?, email=?, password=? WHERE id=?'
 const GET_USER_BY_ID_QUERY = 'SELECT * FROM user WHERE id=? ALLOW FILTERING'
 const GET_USER_QUERY = 'SELECT * FROM user WHERE email=? AND password=? ALLOW FILTERING'
