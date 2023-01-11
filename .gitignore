@@ -153,3 +153,6 @@ Thumbs.db
 /.idea/misc.xml
 /.idea/todo-app-on-kubernetes.iml
 /.idea/vcs.xml
+
+openstack-credentials.yaml
+cloudflare-credentials.yaml
