@@ -24,6 +24,7 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
+const {cassandraClient, cassandraAdminClient, initDatabase} = require("./config/db");
 
 app.use('/api/auth', authRoutes);
 app.use('/api/data', dataRoutes);
@@ -38,6 +39,8 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5678;
 
 app.listen(PORT, () => {
+  console.log("Server starting...")
+  initDatabase();
   console.log(`Server running on port ${PORT}`);
 });
 

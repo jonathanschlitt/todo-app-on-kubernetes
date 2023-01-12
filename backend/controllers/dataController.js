@@ -5,10 +5,14 @@ const env = require('dotenv').config();
 addTodoItem_post = async (req, res) => {
     let {name, description, active, showDetails, deadline} = req.body;
 
+    if (showDetails === undefined) {
+        showDetails = true
+    }
+
     let user = await req.user
 
     if (user !== undefined && user != null) {
-        todoRepository.insertToDo(user.id, name, description, active, showDetails, deadline)
+        todoRepository.insertToDo(user.id, name, description, active, deadline)
             .then(
                 todoId => {
                     return res.status(200).json(
@@ -84,7 +88,14 @@ updateTodoItem_put = async (req, res) => {
 
     const {name, description, active, showDetails, deadline} = req.body;
 
-    const updatedTodo = todoRepository.updateToDo()
+    const updatedTodo = todoRepository.updateToDo(
+        id.toString(),
+        active,
+        deadline,
+        deadline,
+        name,
+        showDetails
+    )
 
 
     const todoItem = {

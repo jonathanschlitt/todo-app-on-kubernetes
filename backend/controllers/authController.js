@@ -1,8 +1,10 @@
 // Importing authentication packages
 const jwt = require('jsonwebtoken');
+const env = require('dotenv').config()
 const key = process.env.SECRET;
 const bcrypt = require('bcrypt');
 const userRepository = require("../repository/userRepository");
+const {getUserById} = require("../repository/userRepository");
 
 // Creating a JWT
 // max age in seconds
@@ -18,6 +20,14 @@ const createToken = (payload) => {
 
 signup_post = async (req, res) => {
     const {surname, lastname, email, password} = req.body;
+
+    if (surname === undefined || lastname === undefined || email === undefined || password === undefined) {
+        res.status(400);
+        throw new Error(
+            `Not all required values are valid!`
+        );
+    }
+
     console.log("signup_post called with: surname[" + surname + "] lastname[" + lastname + "] email [" + email + "] password[" + password + "]")
 
     let userExists = await userRepository.userExists(email)
@@ -29,7 +39,7 @@ signup_post = async (req, res) => {
         );
     }
 
-    let pwHsh = await bcrypt.hash(password, process.env.SALT)
+    let pwHsh = await bcrypt.hash(password, await bcrypt.genSalt(12))
     userRepository.insertUser(surname, lastname, email, pwHsh).then(
         user => {
             const payload = {
@@ -40,7 +50,7 @@ signup_post = async (req, res) => {
             //   res.status(200).json({
             //   //     message: `A verification email has been sent to ${user.email}. It will be expire after one day. If you not get verification Email click on resend token.`,
             //   //   });
-            res.status(200).json({message: 'User ' + user.uuid + " " + user.email + ' has been created!'});
+            res.status(200).json({message: 'User ' + surname + " " + lastname + " " + email + ' has been created!'});
         },
         error => {
             console.log(error)
@@ -51,11 +61,11 @@ signup_post = async (req, res) => {
 
 login_post = async (req, res) => {
     let {email, password} = req.body;
-    let pwHsh = await bcrypt.hash(password, process.env.SALT)
+  //  let pwHsh = await bcrypt.hash(password, await bcrypt.genSalt(12))
 
     console.log("LOGIN: user[" + email + "] " + new Date())
 
-
+    console.log("1")
     let userExists = await userRepository.userExists(email)
 
     if (!userExists) {
@@ -66,22 +76,21 @@ login_post = async (req, res) => {
         );
     }
 
-    let user = await userRepository.getUser(email, pwHsh)
-        // .then(
-        //     user => {
-        //         console.log("user: " + user)
-        //         },
-        //     )
-        // .catch(
-        //     (err) => {
-        //         res.status(500).json({message: 'Error: ' + err});
-        //     }
-        // )
+    let user = await userRepository.getUser(email)
+    console.log("2")
+    if (!await bcrypt.compare(password, user.password)) {
+        res.status(403)
+        throw new Error(
+            "Wrong email or password"
+        )
+    }
 
     const payload = {
         id : user.id,
         email: user.email,
     };
+
+    console.log("3")
 
     const token = createToken(payload);
 
