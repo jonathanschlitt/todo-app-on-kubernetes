@@ -83,3 +83,22 @@ helm install todo-app ./todo-app -n todo-app --create-namespace --values="k8s3-v
 
 helm uninstall todo-app
 ```
+
+### Install ArgoCD
+
+```
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+### Delete ArgoCD
+
+```
+kubectl delete all --all -n argocd
+
+kubectl delete ns argocd
+```

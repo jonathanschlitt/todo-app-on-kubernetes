@@ -14,15 +14,3 @@ maintainers:
     email: development@jonathanschlitt.de
 
 appVersion: 1.0.0
-
-# dependencies:
-#   - name: traefik
-#     version: 9.13.3
-#     repository: https://helm.traefik.io/traefik
-#     condition: traefik.enabled
-
-# # add values file to treafik chart
-# # https://helm.sh/docs/chart_template_guide/subcharts_and_globals/#using-the-global-values
-
-# # add values file to treafik chart
-

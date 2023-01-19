@@ -19,7 +19,7 @@ ports:
     tls:
       enabled: false
       # (optional) Set a Default CertResolver
-      certResolver: opemstack
+      certResolver: openstack
   
 
 env:
