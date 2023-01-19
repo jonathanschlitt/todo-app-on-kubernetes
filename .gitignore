@@ -64,7 +64,7 @@ typings/
 .node_repl_history
 
 # Output of 'npm pack'
-*.tgz
+# *.tgz
 
 # Yarn Integrity file
 .yarn-integrity
@@ -135,7 +135,6 @@ Thumbs.db
 # git has its own built in compression methods
 *.7z
 *.dmg
-*.gz
 *.iso
 *.jar
 *.rar
@@ -144,7 +143,7 @@ Thumbs.db
 *.csv
 *.txt
 *.pdf
-
+*.gz
 *.rest
 
 *.svg
