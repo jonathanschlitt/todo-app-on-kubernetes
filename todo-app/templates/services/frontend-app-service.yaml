@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.service.reactapp.name }}
+  namespace: todo-app
   labels:
     app: {{ template "reactapp.name" . }}
     chart: {{ template "nodeapp.chart" . }}

@@ -1,0 +1,21 @@
+apiVersion: v1
+entries:
+  todo-app-chart:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2023-01-19T16:52:39.110997+01:00"
+    description: helm chart for todo-app
+    digest: c386ef11b9244305e4a3ce9c9ea020fa53b10e4deda2b376e1cab47a90278aec
+    keywords:
+    - nodejs
+    - reactjs
+    - express
+    - chart
+    maintainers:
+    - email: development@jonathanschlitt.de
+      name: Jonathan Schlitt
+    name: todo-app-chart
+    urls:
+    - todo-app-chart-1.0.0.tgz
+    version: 1.0.0
+generated: "2023-01-19T16:52:39.110164+01:00"

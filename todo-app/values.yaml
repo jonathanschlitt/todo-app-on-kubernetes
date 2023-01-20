@@ -9,21 +9,21 @@ apps:
     repository: jonathanschlitt/todo-frontend
     tag: 'latest'
     replicaCount: 3
-    backendUrl: "https://todo-backend.jonathanschlitt.cc"
+    backendUrl: 'todo-backend.k8s3.de'
   pullPolicy: Always
 
 service:
   reactapp:
     name: todo-frontend-service
-    ingressDomainName: "todo-app-on-kubernetes.jonathanschlitt.cc"
-    type: ClusterIP
+    ingressDomainName: 'todo-app-on-kubernetes.k8s3.de'
+    type: LoadBalancer
     protocol: TCP
     externalPort: 80
     internalPort: 8888
   nodeapp:
     name: todo-backend-service
-    ingressDomainName: "todo-backend.jonathanschlitt.cc"
-    type: ClusterIP
+    ingressDomainName: 'todo-backend.k8s3.de'
+    type: LoadBalancer
     protocol: TCP
     externalPort: 80
     internalPort: 7777
