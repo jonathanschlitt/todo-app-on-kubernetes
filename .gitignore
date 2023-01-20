@@ -155,3 +155,4 @@ Thumbs.db
 
 openstack-credentials.yaml
 cloudflare-credentials.yaml
+cloudflare-values.yaml

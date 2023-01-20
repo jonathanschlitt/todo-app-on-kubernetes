@@ -8,13 +8,13 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`argocd.jonathanschlitt.cc`)
+      match: Host(`example.com`)
       priority: 10
       services:
         - name: argocd-server
           port: 443
     - kind: Rule
-      match: Host(`argocd.jonathanschlitt.cc`) && Headers(`Content-Type`, `application/grpc`)
+      match: Host(`example.com`) && Headers(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: argocd-server
@@ -22,5 +22,3 @@ spec:
           scheme: h2c
   tls:
     certResolver: cloudflare
-
-    
