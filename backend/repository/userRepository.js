@@ -35,7 +35,6 @@ module.exports.getUser = async function getUser(email) {
     return await cassandraClient.execute(GET_USER_QUERY, [email])
         .then(
             result => {
-                console.log(result.rows)
                 return result.rows[0]
             }
         )

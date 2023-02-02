@@ -65,7 +65,6 @@ login_post = async (req, res) => {
 
     console.log("LOGIN: user[" + email + "] " + new Date())
 
-    console.log("1")
     let userExists = await userRepository.userExists(email)
 
     if (!userExists) {
@@ -77,7 +76,6 @@ login_post = async (req, res) => {
     }
 
     let user = await userRepository.getUser(email)
-    console.log("2")
     if (!await bcrypt.compare(password, user.password)) {
         res.status(403)
         throw new Error(
@@ -89,8 +87,6 @@ login_post = async (req, res) => {
         id : user.id,
         email: user.email,
     };
-
-    console.log("3")
 
     const token = createToken(payload);
 
