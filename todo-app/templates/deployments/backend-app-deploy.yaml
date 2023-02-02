@@ -28,36 +28,36 @@ spec:
         imagePullPolicy: {{ .Values.apps.pullPolicy }}
 
         env:          
-          - name: USERNAME
+          - name: DATABASE_CONTACT_POINT
             valueFrom:
               secretKeyRef:
                 name: backend-credentials
-                key:  db_username
-          - name: PASSWORD
+                key:  DATABASE_CONTACT_POINT
+          - name: DATABASE_LOCAL_DATACENTER
             valueFrom:
               secretKeyRef:
                 name: backend-credentials
-                key:  db_password
-          - name: DB_NAME
+                key:  DATABASE_LOCAL_DATACENTER
+          - name: DATABASE_KEYSPACE
             valueFrom:
               secretKeyRef:
                 name: backend-credentials
-                key:  db_name
-          - name: DB_HOST
-            valueFrom:
-              secretKeyRef:
-                name: backend-credentials
-                key:  db_host
-          - name: DB_PORT
-            valueFrom:
-              secretKeyRef:
-                name: backend-credentials
-                key:  db_port
+                key:  DATABASE_KEYSPACE
           - name: SECRET
             valueFrom:
               secretKeyRef:
                 name: backend-credentials
-                key:  secret
+                key:  SECRET
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  DATABASE_USER
+          - name: DATABASE_PASS
+            valueFrom:
+              secretKeyRef:
+                name: backend-credentials
+                key:  DATABASE_PASS
           - name: PORT
             value: {{ .Values.service.nodeapp.internalPort | quote }}
     
