@@ -36,13 +36,13 @@ let CREATE_USER_TABLE_QUERY = "create table if not exists user\n" +
 
 
 const cassandraAdminClient = new cassandra.Client({
-    contactPoints: ['localhost'],
+    contactPoints: [process.env.DATABASE_URL],
     localDataCenter: 'us-east-1',
     authProvider: authProvider
 });
 
 const cassandraClient = new cassandra.Client({
-  contactPoints: ['localhost'],
+  contactPoints: [process.env.DATABASE_URL],
   localDataCenter: 'us-east-1',
   keyspace: 'todoapp',
    authProvider: authProvider
