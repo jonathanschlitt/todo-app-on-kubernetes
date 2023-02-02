@@ -32,7 +32,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: backend-credentials
-                key:  DATABASE_CONTACT_POINT
+                key:  DATABASE_CONTACT_POINTS
           - name: DATABASE_LOCAL_DATACENTER
             valueFrom:
               secretKeyRef:
