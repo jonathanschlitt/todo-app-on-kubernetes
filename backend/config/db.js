@@ -1,8 +1,7 @@
 const cassandra = require('cassandra-driver');
 const env = require('dotenv').config();
-//let authProvider = new cassandra.auth.PlainTextAuthProvider(process.env.DATABASE_USER, process.env.DATABASE_PASS);
 let authProvider = new cassandra.auth.PlainTextAuthProvider(process.env.DATABASE_USER, process.env.DATABASE_PASS);
-let CREATE_KEYSPACE_QUERY = "create keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 3};"
+let CREATE_KEYSPACE_QUERY = "create keyspace " + process.env.DATABASE_KEYSPACE + " with replication = {'class': 'SimpleStrategy', 'replication_factor': 3};"
 
 let CREATE_TODO_TABLE_QUERY = "create table if not exists todo\n" +
     "(\n" +
@@ -33,6 +32,10 @@ let CREATE_USER_TABLE_QUERY = "create table if not exists user\n" +
     "and compression = {'sstable_compression': 'org.apache.cassandra.io.compress.LZ4Compressor'}\n" +
     "and dclocal_read_repair_chance = 0\n" +
     "and speculative_retry = '99.0PERCENTILE';"
+
+
+console.log(process.env.DATABASE_CONTACT_POINTS)
+console.log(process.env.DATABASE_CONTACT_POINTS.split(','))
 
 const cassandraAdminClient = new cassandra.Client({
     contactPoints: process.env.DATABASE_CONTACT_POINTS.split(','),
