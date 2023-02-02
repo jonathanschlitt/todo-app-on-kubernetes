@@ -2,7 +2,7 @@ const cassandra = require('cassandra-driver');
 const env = require('dotenv').config();
 //let authProvider = new cassandra.auth.PlainTextAuthProvider(process.env.DATABASE_USER, process.env.DATABASE_PASS);
 let authProvider = new cassandra.auth.PlainTextAuthProvider(process.env.DATABASE_USER, process.env.DATABASE_PASS);
-let CREATE_KEYSPACE_QUERY = "create keyspace todoapp with replication = {'class': 'SimpleStrategy', 'replication_factor': 3};"
+let CREATE_KEYSPACE_QUERY = "create keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 3};"
 
 let CREATE_TODO_TABLE_QUERY = "create table if not exists todo\n" +
     "(\n" +
@@ -34,24 +34,28 @@ let CREATE_USER_TABLE_QUERY = "create table if not exists user\n" +
     "and dclocal_read_repair_chance = 0\n" +
     "and speculative_retry = '99.0PERCENTILE';"
 
+console.log("contactPointsEnv " + process.env.DATABASE_CONTACT_POINTS)
+console.log("contactPointsSplit " + process.env.DATABASE_CONTACT_POINTS.split(','))
+console.log("localDatacenter " + process.env.DATABASE_LOCAL_DATACENTER)
+console.log("keyspace " + process.env.DATABASE_KEYSPACE)
 
 const cassandraAdminClient = new cassandra.Client({
-    contactPoints: [process.env.DATABASE_URL],
-    localDataCenter: 'us-east-1',
+    contactPoints: process.env.DATABASE_CONTACT_POINTS.split(','),
+    localDataCenter: process.env.DATABASE_LOCAL_DATACENTER,
     authProvider: authProvider
 });
 
 const cassandraClient = new cassandra.Client({
-  contactPoints: [process.env.DATABASE_URL],
-  localDataCenter: 'us-east-1',
-  keyspace: 'todoapp',
-   authProvider: authProvider
+  contactPoints: process.env.DATABASE_CONTACT_POINTS.split(','),
+  localDataCenter: process.env.DATABASE_LOCAL_DATACENTER,
+  keyspace: process.env.DATABASE_KEYSPACE,
+  authProvider: authProvider
 });
 
 function initDatabase(){
     cassandraClient.connect(function(e) {
         if (e !== null) {
-            if (e.toString().includes("Keyspace 'todoapp' does not exist")) {
+            if (e.toString().includes("Keyspace " + process.env.DATABASE_KEYSPACE + " does not exist")) {
                 console.log("Server is creating needed Keyspace")
                 cassandraAdminClient.connect(function (e) {
                     cassandraAdminClient.execute(CREATE_KEYSPACE_QUERY, function(e, res) {
