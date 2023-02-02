@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: {{ .Values.apps.pullPolicy }}
 
         env:          
-          - name: DATABASE_CONTACT_POINT
+          - name: DATABASE_CONTACT_POINTS
             valueFrom:
               secretKeyRef:
                 name: backend-credentials
