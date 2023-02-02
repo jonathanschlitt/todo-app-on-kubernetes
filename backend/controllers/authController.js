@@ -65,7 +65,7 @@ login_post = async (req, res) => {
 
     console.log("LOGIN: user[" + email + "] " + new Date())
 
-    console.log("LOGIN: req.body = " + req.body)
+    console.log(req.body)
 
     let userExists = await userRepository.userExists(email)
 
