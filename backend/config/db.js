@@ -33,9 +33,13 @@ let CREATE_USER_TABLE_QUERY = "create table if not exists user\n" +
     "and dclocal_read_repair_chance = 0\n" +
     "and speculative_retry = '99.0PERCENTILE';"
 
+const {
+  DATABASE_CONTACT_POINTS, DATABASE_LOCAL_DATACENTER, DATABASE_KEYSPACE
+} = process.env
 
-console.log(process.env.DATABASE_CONTACT_POINTS)
-console.log(process.env.DATABASE_CONTACT_POINTS.split(','))
+console.log(DATABASE_CONTACT_POINTS)
+console.log(DATABASE_LOCAL_DATACENTER)
+console.log(DATABASE_KEYSPACE)
 
 const cassandraAdminClient = new cassandra.Client({
     contactPoints: process.env.DATABASE_CONTACT_POINTS.split(','),
