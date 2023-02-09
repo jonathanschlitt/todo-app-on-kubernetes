@@ -102,3 +102,70 @@ kubectl delete all --all -n argocd
 
 kubectl delete ns argocd
 ```
+
+### Install ArgoCD CLI
+
+```
+brew install brew install argocd
+
+or 
+
+$version = (Invoke-RestMethod https://api.github.com/repos/argoproj/argo-cd/releases/latest).tag_name
+
+$url = "https://github.com/argoproj/argo-cd/releases/download/" + $version + "/argocd-windows-amd64.exe"
+$output = "argocd.exe"
+
+Invoke-WebRequest -Uri $url -OutFile $output
+
+
+```
+
+### Add Argocd Image Updater
+
+
+```
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
+```
+
+#### Configure Accounts through the CLI
+
+```
+argocd login <ip> --username admin --grpc-web-root-path /
+
+argocd account list
+
+k edit configmap argocd-cm -n argocd
+
+# add this line accounts.image-updater: apiKey
+
+argocd account list
+
+argocd account generate-token --account image-updater --id image-updater
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJpbWFnZS11cGRhdGVyOmFwaUtleSIsIm5iZiI6MTY3NTkzODgxNywiaWF0IjoxNjc1OTM4ODE3LCJqdGkiOiJpbWFnZS11cGRhdGVyIn0.65Nq0N4HQxut1reE-D_RTxT79OYt-lOEUA9zEHXsjAo
+
+#base64
+ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBjM01pT2lKaGNtZHZZMlFpTENKemRXSWlPaUpwYldGblpTMTFjR1JoZEdWeU9tRndhVXRsZVNJc0ltNWlaaUk2TVRZM05Ua3pPRGd4Tnl3aWFXRjBJam94TmpjMU9UTTRPREUzTENKcWRHa2lPaUpwYldGblpTMTFjR1JoZEdWeUluMC42NU5xME40SFF4dXQxcmVFLURfUlR4VDc5T1l0LWxPRVVBOXpFSFhzakFvCg==
+```
+
+#### Set RBAC for the new user 
+data:
+  policy.csv: |
+    p, role:image-updater, applications, get, */*, allow
+    p, role:image-updater, applications, update, */*, allow
+    g, image-updater, role:image-updater
+
+```
+k edit configmap argocd-rbac-cm -n argocd
+```
+
+#### Restart Image Updater to apply the changes to the ConfigMap
+```
+kubectl -n argocd rollout restart deployment argocd-image-updater
+```
+
+kubectl create secret generic argocd-image-updater-secret \
+  --from-literal argocd.token=ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBjM01pT2lKaGNtZHZZMlFpTENKemRXSWlPaUpwYldGblpTMTFjR1JoZEdWeU9tRndhVXRsZVNJc0ltNWlaaUk2TVRZM05Ua3pPRGd4Tnl3aWFXRjBJam94TmpjMU9UTTRPREUzTENKcWRHa2lPaUpwYldGblpTMTFjR1JoZEdWeUluMC42NU5xME40SFF4dXQxcmVFLURfUlR4VDc5T1l0LWxPRVVBOXpFSFhzakFvCg== --dry-run=client -o yaml | kubectl -n argocd apply -f -
+
+
+kubectl -n argocd rollout restart deployment argocd-image-updater
