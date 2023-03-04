@@ -29,6 +29,7 @@ jobs:
         echo "Latest tag: $LATEST_TAG"
         if [[ "$LATEST_TAG" == "" ]]; then
           NEW_TAG="1.0.0"
+          echo "Test"
         else
           MAJOR=$(echo $LATEST_TAG | cut -d '.' -f 1)
           MINOR=$(echo $LATEST_TAG | cut -d '.' -f 2)
