@@ -36,13 +36,13 @@ jobs:
     - name: Build the Docker image ==> Frontend
       working-directory: ./frontend
       run: |
-        docker build . --build-arg VERSION=${{ steps.latest_tag.outputs.tag }} --tag jonathanschlitt/todo-frontend:latest .
+        docker build . --build-arg VERSION=${{ steps.latest_tag.outputs.tag }} --tag jonathanschlitt/todo-frontend:latest
         docker tag jonathanschlitt/todo-frontend:latest jonathanschlitt/todo-frontend:${{ steps.latest_tag.outputs.tag }}
       
     - name: Build the Docker image ==> Backend
       working-directory: ./backend
       run: |
-        docker build . --build-arg VERSION=${{ steps.latest_tag.outputs.tag }} --tag jonathanschlitt/todo-backend:latest .
+        docker build . --build-arg VERSION=${{ steps.latest_tag.outputs.tag }} --tag jonathanschlitt/todo-backend:latest
         docker tag jonathanschlitt/todo-backend:latest jonathanschlitt/todo-backend:${{ steps.latest_tag.outputs.tag }} 
       
     - name: Docker Push ==> Frontend
