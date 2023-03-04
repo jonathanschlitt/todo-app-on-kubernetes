@@ -26,13 +26,12 @@ jobs:
       id: latest_tag
       run: |
         LATEST_TAG=$(docker run --rm -i jonathanschlitt/todo-backend:latest sh -c 'echo $VERSION')
-        if [[ $LATEST_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-          NEW_TAG=$(echo $LATEST_TAG | awk -F. '{$NF++;print}' OFS=.)
-        else
-          NEW_TAG="1.0.0"
-        fi
-        echo "::set-output name=tag::$NEW_TAG"
-      
+        VERSION_ARRAY=(${LATEST_TAG//./ })
+        MAJOR=${VERSION_ARRAY[0]}
+        MINOR=${VERSION_ARRAY[1]}
+        PATCH=$((${VERSION_ARRAY[2]}+1))
+        echo "::set-output name=tag::$MAJOR.$MINOR.$PATCH"
+
     - name: Build the Docker image ==> Frontend
       working-directory: ./frontend
       run: |
