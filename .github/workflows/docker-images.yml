@@ -26,11 +26,13 @@ jobs:
       id: latest_tag
       run: |
         LATEST_TAG=$(docker run --rm -i jonathanschlitt/todo-backend:latest sh -c 'echo $VERSION')
-        if [ -z "$LATEST_TAG" ]; then
+        if [[ "$LATEST_TAG" == "" ]]; then
           NEW_TAG="1.0.0"
         else
-          NEW_TAG=$(echo $LATEST_TAG | sed 's/.*\.\(.*\)/\1/')
-          NEW_TAG=$((NEW_TAG + 1))
+          MAJOR=$(echo $LATEST_TAG | cut -d '.' -f 1)
+          MINOR=$(echo $LATEST_TAG | cut -d '.' -f 2)
+          PATCH=$(echo $LATEST_TAG | cut -d '.' -f 3)
+          NEW_TAG="$MAJOR.$MINOR.$((PATCH+1))"
         fi
         echo "::set-output name=tag::$NEW_TAG"
       
