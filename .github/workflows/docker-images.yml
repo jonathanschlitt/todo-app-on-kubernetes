@@ -14,26 +14,34 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-        
+
+    - name: Determine Git commit SHA
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      id: vars
+
+    - name: Determine Docker image version
+      run: echo "::set-output name=image_version::$(echo ${{ steps.vars.outputs.sha_short }})"
+      id: image_version
+
     - name: Build the Docker image ==> Frontend
       working-directory: ./frontend
-      run: docker build . --tag jonathanschlitt/todo-frontend:latest
-      
+      run: docker build . --tag jonathanschlitt/todo-frontend:${{ steps.image_version.outputs.image_version }}
+
     - name: Build the Docker image ==> Backend
       working-directory: ./backend
-      run: docker build . --tag jonathanschlitt/todo-backend:latest
-      
+      run: docker build . --tag jonathanschlitt/todo-backend:${{ steps.image_version.outputs.image_version }}
+
     - name: Docker Push ==> Frontend
-      run: docker push jonathanschlitt/todo-frontend
-      
+      run: docker push jonathanschlitt/todo-frontend:${{ steps.image_version.outputs.image_version }}
+
     - name: Docker Push ==> Backend
-      run: docker push jonathanschlitt/todo-backend
-    
+      run: docker push jonathanschlitt/todo-backend:${{ steps.image_version.outputs.image_version }}
+
     
