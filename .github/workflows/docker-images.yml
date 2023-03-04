@@ -26,7 +26,7 @@ jobs:
       id: latest_tag
       run: |
         LATEST_TAG=$(docker run --rm -i jonathanschlitt/todo-backend:latest sh -c 'echo $VERSION')
-        echo LATEST_TAG
+        echo $LATEST_TAG
         if [[ "$LATEST_TAG" == "" ]]; then
           NEW_TAG="1.0.0"
         else
