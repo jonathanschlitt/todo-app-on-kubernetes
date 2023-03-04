@@ -14,34 +14,41 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
+    
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-
-    - name: Determine Git commit SHA
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-      id: vars
-
-    - name: Determine Docker image version
-      run: echo "::set-output name=image_version::$(echo ${{ steps.vars.outputs.sha_short }})"
-      id: image_version
-
+        
+    - name: Get latest version tag
+      id: latest_tag
+      run: |
+        LATEST_TAG=$(docker run --rm -i jonathanschlitt/todo-backend:latest sh -c 'echo $VERSION')
+        if [[ $LATEST_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          NEW_TAG=$(echo $LATEST_TAG | awk -F. '{$NF++;print}' OFS=.)
+        else
+          NEW_TAG="1.0.0"
+        fi
+        echo "::set-output name=tag::$NEW_TAG"
+      
     - name: Build the Docker image ==> Frontend
       working-directory: ./frontend
-      run: docker build . --tag jonathanschlitt/todo-frontend:${{ steps.image_version.outputs.image_version }}
-
+      run: |
+        docker build . --build-arg VERSION=${{ steps.latest_tag.outputs.tag }} --tag jonathanschlitt/todo-frontend:latest .
+        docker tag jonathanschlitt/todo-frontend:latest jonathanschlitt/todo-frontend:${{ steps.latest_tag.outputs.tag }}
+      
     - name: Build the Docker image ==> Backend
       working-directory: ./backend
-      run: docker build . --tag jonathanschlitt/todo-backend:${{ steps.image_version.outputs.image_version }}
-
+      run: |
+        docker build . --build-arg VERSION=${{ steps.latest_tag.outputs.tag }} --tag jonathanschlitt/todo-backend:latest .
+        docker tag jonathanschlitt/todo-backend:latest jonathanschlitt/todo-backend:${{ steps.latest_tag.outputs.tag }} 
+      
     - name: Docker Push ==> Frontend
-      run: docker push jonathanschlitt/todo-frontend:${{ steps.image_version.outputs.image_version }}
-
+      run: |
+        docker push jonathanschlitt/todo-frontend:${{ steps.latest_tag.outputs.tag }} 
+      
     - name: Docker Push ==> Backend
-      run: docker push jonathanschlitt/todo-backend:${{ steps.image_version.outputs.image_version }}
-
-    
+      run: |
+        docker push jonathanschlitt/todo-backend:${{ steps.latest_tag.outputs.tag }} 
