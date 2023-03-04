@@ -50,8 +50,10 @@ jobs:
       
     - name: Docker Push ==> Frontend
       run: |
-        docker push jonathanschlitt/todo-frontend:${{ steps.latest_tag.outputs.tag }} 
+        docker push jonathanschlitt/todo-frontend:${{ steps.latest_tag.outputs.tag }}
+        docker push jonathanschlitt/todo-frontend:latest
       
     - name: Docker Push ==> Backend
       run: |
         docker push jonathanschlitt/todo-backend:${{ steps.latest_tag.outputs.tag }} 
+        docker push jonathanschlitt/todo-backend:latest
