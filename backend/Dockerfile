@@ -14,6 +14,9 @@ RUN npm install
 # expose port
 EXPOSE 7777
 
+ARG VERSION
+ENV VERSION=$VERSION
+
 # start app
 CMD ["npm", "start"]
 

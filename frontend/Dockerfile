@@ -14,6 +14,9 @@ RUN npm install
 # expose port
 EXPOSE 8888
 
+ARG VERSION
+ENV VERSION=$VERSION
+
 # start app
 # CMD ["npm", "run", "start-production"]
 CMD ["npm", "run", "start"]

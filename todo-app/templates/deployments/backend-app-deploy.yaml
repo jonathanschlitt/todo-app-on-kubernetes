@@ -60,6 +60,13 @@ spec:
                 key:  DATABASE_PASS
           - name: PORT
             value: {{ .Values.service.nodeapp.internalPort | quote }}
+        resources:
+          limits:
+            cpu: {{ .Values.apps.nodeapp.cpuLimit }}
+            memory: {{ .Values.apps.nodeapp.memoryLimit }}
+          requests:
+            cpu: {{ .Values.apps.nodeapp.cpuRequest }}
+            memory: {{ .Values.apps.nodeapp.memoryRequest }}
     
 
 

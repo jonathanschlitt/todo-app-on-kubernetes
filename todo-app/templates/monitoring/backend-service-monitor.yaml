@@ -1,0 +1,11 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.apps.name }}-metrics
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.service.nodeapp.name }}
+  endpoints:
+    - port: metrics
+      path: /metrics

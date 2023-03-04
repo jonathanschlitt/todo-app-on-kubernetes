@@ -33,4 +33,13 @@ spec:
           value: {{ .Values.service.reactapp.internalPort | quote }}
         - name: PORT
           value: {{ .Values.service.reactapp.internalPort | quote }}
+        resources:
+          limits:
+            cpu: {{ .Values.apps.reactapp.cpuLimit }}
+            memory: {{ .Values.apps.reactapp.memoryLimit }}
+          requests:
+            cpu: {{ .Values.apps.reactapp.cpuRequest }}
+            memory: {{ .Values.apps.reactapp.memoryRequest }}
+
+      
 

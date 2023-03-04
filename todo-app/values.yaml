@@ -1,29 +1,50 @@
 apps:
+  name: todo-app
   nodeapp:
     name: todo-backend-app-deploy
     repository: jonathanschlitt/todo-backend
     tag: 'latest'
     replicaCount: 3
+    # ressources for the backend pods
+    cpuLimit: 1
+    memoryLimit: 1Gi
+    cpuRequest: 500m
+    memoryRequest: 256Mi
+
   reactapp:
     name: todo-frontend-app-deploy
     repository: jonathanschlitt/todo-frontend
     tag: 'latest'
     replicaCount: 3
-    backendUrl: 'todo-backend.k8s3.de'
+    backendUrl: 'todo-backend.k8s3.de' # set to loadbalancer ip of backend when not using ingress
+    # ressources for the frontend pods
+    cpuLimit: 1
+    memoryLimit: 1Gi
+    cpuRequest: 500m
+    memoryRequest: 256Mi
   pullPolicy: Always
 
 service:
   reactapp:
     name: todo-frontend-service
     ingressDomainName: 'todo-app-on-kubernetes.k8s3.de'
-    type: LoadBalancer
+    type: LoadBalancer # Type ClusterIP for ingress
     protocol: TCP
     externalPort: 80
     internalPort: 8888
+
   nodeapp:
     name: todo-backend-service
     ingressDomainName: 'todo-backend.k8s3.de'
-    type: LoadBalancer
+    type: LoadBalancer # Type ClusterIP for ingress
     protocol: TCP
     externalPort: 80
     internalPort: 7777
+
+ingress:
+  enabled: false
+
+networkPolicy:
+  enabled: true
+  todoNamespace: todo-app
+  databaseNamespace: scylla
