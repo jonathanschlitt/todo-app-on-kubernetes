@@ -157,3 +157,4 @@ openstack-credentials.yaml
 cloudflare-credentials.yaml
 cloudflare-values.yaml
 ./idea
+/.idea/workspace.xml
