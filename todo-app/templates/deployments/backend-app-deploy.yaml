@@ -20,6 +20,16 @@ spec:
         app: {{ template "nodeapp.name" . }}
         release: {{ .Release.Name }}
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ template "nodeapp.name" . }}
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - image: {{ .Values.apps.nodeapp.repository }}:{{ .Values.apps.nodeapp.tag }}
         name: {{ .Chart.Name }}

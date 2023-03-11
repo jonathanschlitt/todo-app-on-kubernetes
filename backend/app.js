@@ -168,10 +168,10 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5678;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log('Server starting...');
-  try{
-    initDatabase();
+  try {
+    await initDatabase();
   } catch (error) {
     console.log(error);
   }
