@@ -170,7 +170,7 @@ const Modal = ({ isOpen, openModal, closeModal, update, todo }) => {
                               }
                               name="active"
                               id="active"
-                              className="shadow-sm focus:ring-lime-500 focus:border-lime-500 block sm:text-sm border-gray-300 rounded-md w-5 h-5"
+                              className="shadow-sm focus:ring-lime-500 focus:border-lime-500 block sm:text-sm border-gray-300 rounded-md w-5 h-5 text-green-500"
                             />
                           </div>
                         </div>

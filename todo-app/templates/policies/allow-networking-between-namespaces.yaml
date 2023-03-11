@@ -1,4 +1,4 @@
-{{- if .Values.networkPolicy.enabled -}}
+# {{- if .Values.networkPolicy.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -7,24 +7,24 @@ spec:
   podSelector:
     matchLabels: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: {{ .Values.networkPolicy.todoNamespace }}
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: {{ .Values.networkPolicy.databaseNamespace }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: { { .Values.networkPolicy.todoNamespace } }
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: { { .Values.networkPolicy.databaseNamespace } }
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: {{ .Values.networkPolicy.todoNamespace }}
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: {{ .Values.networkPolicy.databaseNamespace }}
-{{- end -}}
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: { { .Values.networkPolicy.todoNamespace } }
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: { { .Values.networkPolicy.databaseNamespace } }
+# {{- end -}}

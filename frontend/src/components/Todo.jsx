@@ -8,6 +8,11 @@ import { useDispatch } from 'react-redux';
 import { deleteTodo } from '../api/todo/todoSlice';
 import { useState } from 'react';
 import Modal from './Modal';
+import { updateTodo } from '../api/todo/todoSlice';
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
 
 const Todo = ({ todo }) => {
   const dispatch = useDispatch();
@@ -21,13 +26,28 @@ const Todo = ({ todo }) => {
   function openModal() {
     setIsOpen(true);
   }
+
+  const toggleOpenAndUpdate = () => {
+    return () => {
+      dispatch(updateTodo({ ...todo, showDetails: !todo.showDetails }));
+    };
+  };
+
   return (
     <div className="">
       <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-2">
         <Disclosure>
           {({ open }) => (
             <>
-              <Disclosure.Button className="flex w-full justify-between rounded-lg bg-green-100 p-4 text-left text-sm font-medium text-green-900 hover:bg-green-200 duration-200 focus:outline-none focus-visible:ring focus-visible:ring-green-500 focus-visible:ring-opacity-75">
+              <Disclosure.Button
+                onClick={toggleOpenAndUpdate()}
+                className={classNames(
+                  'flex w-full justify-between rounded-lg p-4 text-left text-sm font-medium text-green-900 duration-200 focus:outline-none focus-visible:ring focus-visible:ring-green-500 focus-visible:ring-opacity-75',
+                  todo.active
+                    ? 'bg-green-100 hover:bg-green-200'
+                    : 'bg-gray-200 hover:bg-gray-300'
+                )}
+              >
                 <div className="flex w-full justify-between">
                   <span>{todo.name}</span>
                   <ChevronDownIcon
@@ -38,7 +58,7 @@ const Todo = ({ todo }) => {
                 </div>
               </Disclosure.Button>
               <Transition
-                show={open}
+                show={todo.showDetails}
                 enter="transition duration-500 ease-out"
                 enterFrom="transform scale-95 opacity-0"
                 enterTo="transform scale-100 opacity-100"
@@ -46,7 +66,14 @@ const Todo = ({ todo }) => {
                 leaveFrom="transform scale-100 opacity-100"
                 leaveTo="transform scale-95 opacity-0"
               >
-                <Disclosure.Panel className="p-4 mt-1 text-sm text-gray-500 bg-lime-50 rounded-lg hover:bg-lime-100 duration-200">
+                <Disclosure.Panel
+                  className={classNames(
+                    'p-4 mt-1 text-sm text-gray-500  rounded-lg  duration-200',
+                    todo.active
+                      ? 'bg-lime-50 hover:bg-lime-100'
+                      : 'bg-gray-100 hover:bg-gray-200'
+                  )}
+                >
                   <div>
                     <p>{todo.description}</p>
                     <div className="flex items-center justify-between mt-4">

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import Navigation from './components/Navigation';
 
 import { Toaster } from 'react-hot-toast';
+import Register from './pages/Register';
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -26,6 +27,7 @@ const App = () => {
             element={user ? <Home /> : <Navigate to="/login" />}
           />
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
           <Route path="*" element={<Navigate to="/" />}></Route>
         </Routes>
       </div>
