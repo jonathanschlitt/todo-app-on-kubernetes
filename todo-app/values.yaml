@@ -45,6 +45,6 @@ ingress:
   enabled: false
 
 networkPolicy:
-  enabled: true
   todoNamespace: todo-app
   databaseNamespace: scylla
+  datacenter: us-east-1

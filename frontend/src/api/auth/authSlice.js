@@ -71,7 +71,9 @@ export const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.isError = false;
         state.user = action.payload; // return value from thunk
+        state.message = '';
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
@@ -86,6 +88,8 @@ export const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.isError = false;
+        state.message = '';
         state.user = action.payload; // return value from thunk
       })
       .addCase(login.rejected, (state, action) => {

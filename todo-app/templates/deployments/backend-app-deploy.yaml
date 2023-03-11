@@ -29,7 +29,7 @@ spec:
                 operator: In
                 values:
                 - {{ template "nodeapp.name" . }}
-            topologyKey: "kubernetes.io/hostname"
+            topologyKey: kubernetes.io/hostname
       containers:
       - image: {{ .Values.apps.nodeapp.repository }}:{{ .Values.apps.nodeapp.tag }}
         name: {{ .Chart.Name }}
