@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-traffic-between-namespaces
+spec:
+  podSelector:
+    matchLabels: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: {{ template "nodeapp.name" . }}
+  - from:
+      - podSelector:
+          matchLabels:
+            scylla/datacenter: {{ .Values.networkPolicy.datacenter }}
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: {{ template "nodeapp.name" . }}
+  - to:
+    - podSelector:
+        matchLabels:
+          scylla/datacenter: {{ .Values.networkPolicy.datacenter }}

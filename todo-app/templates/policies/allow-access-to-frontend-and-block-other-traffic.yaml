@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-access-to-frontend-and-block-other-traffic
+  namespace: {{.Release.namespace}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "reactapp.name" . }}
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: {{ .Values.service.nodeapp.externalPort }}
+      protocol: TCP
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: {{ .Values.service.reactapp.externalPort }}
+      protocol: TCP
+  egress:
+  - {}
+  policyTypes:
+  - Ingress
+  - Egress
