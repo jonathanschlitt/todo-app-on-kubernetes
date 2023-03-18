@@ -39,6 +39,13 @@ spec:
         - containerPort: {{ .Values.service.nodeapp.externalMetricsPort }}
         imagePullPolicy: {{ .Values.apps.pullPolicy }}
 
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.nodeapp.internalPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
         env:       
           - name: NODE_WORKER_HOSTNAME
             valueFrom:

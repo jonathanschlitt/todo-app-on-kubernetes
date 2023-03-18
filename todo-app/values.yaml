@@ -16,7 +16,7 @@ apps:
     repository: jonathanschlitt/todo-frontend
     tag: 'latest'
     replicaCount: 3
-    backendUrl: 'todo-backend.k8s3.de' # set to loadbalancer ip of backend when not using ingress
+    backendUrl: 'http://todo-backend.k8s3.de' # set to loadbalancer ip of backend when not using ingress
     # ressources for the frontend pods
     cpuLimit: 1
     memoryLimit: 1Gi
@@ -36,7 +36,7 @@ service:
 
   nodeapp:
     name: todo-backend-service
-    ingressDomainName: 'http://todo-backend.k8s3.de'
+    ingressDomainName: 'todo-backend.k8s3.de'
     type: LoadBalancer # Type ClusterIP for ingress
     protocol: TCP
     

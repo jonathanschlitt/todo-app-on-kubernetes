@@ -14,6 +14,8 @@ spec:
     ports:
     - port: {{ .Values.service.nodeapp.externalPort }}
       protocol: TCP
+    - port: {{ .Values.service.nodeapp.externalMetricsPort }}
+      protocol: TCP
   - from:
     - ipBlock:
         cidr: 0.0.0.0/0

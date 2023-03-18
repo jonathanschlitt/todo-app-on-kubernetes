@@ -4,7 +4,7 @@ const { checkUptime } = require('./config/dbConnectionTest');
 
 const app = express();
 
-const labels = ['method', 'route', 'status', 'user_agent', 'host', 'ip'];
+const labels = ['method', 'route', 'status', 'host', 'user_agent', 'ip'];
 
 // Define the metrics we want to collect
 

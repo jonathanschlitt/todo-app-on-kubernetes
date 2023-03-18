@@ -36,6 +36,14 @@ spec:
         ports:
           - containerPort: {{ .Values.service.reactapp.internalPort }}
         imagePullPolicy: {{ .Values.apps.pullPolicy }}
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.reactapp.internalPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          
         env:
         - name: REACT_APP_BACKEND_URL
           value: {{ .Values.apps.reactapp.backendUrl | quote }}
