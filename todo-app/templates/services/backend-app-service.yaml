@@ -13,7 +13,11 @@ spec:
   - port: {{ .Values.service.nodeapp.externalPort }}
     targetPort: {{ .Values.service.nodeapp.internalPort }}
     protocol: {{ .Values.service.nodeapp.protocol }}
-    name: {{ .Values.service.nodeapp.name }}
+    name: {{ .Values.service.nodeapp.portName }}
+  - port: {{ .Values.service.nodeapp.externalMetricsPort }}
+    targetPort: {{ .Values.service.nodeapp.internalMetricsPort }}
+    protocol: {{ .Values.service.nodeapp.protocol }}
+    name: {{ .Values.service.nodeapp.metricsPortName }}
   type: {{ .Values.service.nodeapp.type }}
   selector:
     app: {{ template "nodeapp.name" . }}

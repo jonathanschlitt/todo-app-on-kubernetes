@@ -16,6 +16,6 @@ spec:
   - port: {{ .Values.service.reactapp.externalPort }}
     targetPort: {{ .Values.service.reactapp.internalPort }}
     protocol: {{ .Values.service.reactapp.protocol }}
-    name: {{ .Values.service.reactapp.name }}
+    name: {{ .Values.service.reactapp.portName }}
   type: {{ .Values.service.reactapp.type }}
   

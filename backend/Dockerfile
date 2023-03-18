@@ -14,6 +14,8 @@ RUN npm install
 # expose port
 EXPOSE 7777
 
+EXPOSE 9100
+
 ARG VERSION
 ENV VERSION=$VERSION
 

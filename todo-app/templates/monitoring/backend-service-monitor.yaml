@@ -5,7 +5,8 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.service.nodeapp.name }}
+      app: nodeapp
   endpoints:
-    - port: metrics
+    - interval: 30s
+      port: metrics
       path: /metrics

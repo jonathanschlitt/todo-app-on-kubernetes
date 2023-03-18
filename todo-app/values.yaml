@@ -27,6 +27,7 @@ apps:
 service:
   reactapp:
     name: todo-frontend-service
+    portName: web
     ingressDomainName: 'todo-app-on-kubernetes.k8s3.de'
     type: LoadBalancer # Type ClusterIP for ingress
     protocol: TCP
@@ -35,11 +36,17 @@ service:
 
   nodeapp:
     name: todo-backend-service
-    ingressDomainName: 'todo-backend.k8s3.de'
+    ingressDomainName: 'http://todo-backend.k8s3.de'
     type: LoadBalancer # Type ClusterIP for ingress
     protocol: TCP
+    
+    portName: web
     externalPort: 80
     internalPort: 7777
+
+    metricsPortName: metrics
+    externalMetricsPort: 9100
+    internalMetricsPort: 9100
 
 ingress:
   enabled: false

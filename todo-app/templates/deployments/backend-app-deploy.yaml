@@ -33,11 +33,17 @@ spec:
       containers:
       - image: {{ .Values.apps.nodeapp.repository }}:{{ .Values.apps.nodeapp.tag }}
         name: {{ .Chart.Name }}
+      
         ports:
         - containerPort: {{ .Values.service.nodeapp.internalPort }}
+        - containerPort: {{ .Values.service.nodeapp.externalMetricsPort }}
         imagePullPolicy: {{ .Values.apps.pullPolicy }}
 
-        env:          
+        env:       
+          - name: NODE_WORKER_HOSTNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName       
           - name: DATABASE_CONTACT_POINTS
             valueFrom:
               secretKeyRef:
