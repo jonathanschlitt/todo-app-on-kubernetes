@@ -72,13 +72,13 @@ const initDatabase = async () => {
     const keyspaceMetadata = cassandraAdminClient.execute(
       `SELECT * FROM system_schema.keyspaces WHERE keyspace_name = '${DATABASE_KEYSPACE}'`,
       null,
-      { consistency: cassandra.types.consistencies.localQuorum }
+      { consistency: cassandra.types.consistencies.quorum }
     );
     if (!keyspaceMetadata) {
       console.log(`Creating keyspace ${DATABASE_KEYSPACE}`);
       await cassandraAdminClient.connect();
       cassandraAdminClient.execute(CREATE_KEYSPACE_QUERY, null, {
-        consistency: cassandra.types.consistencies.localQuorum,
+        consistency: cassandra.types.consistencies.quorum,
       });
       console.log(`Created keyspace ${DATABASE_KEYSPACE}`);
     }
@@ -86,14 +86,14 @@ const initDatabase = async () => {
     // Create user table
     console.log(`Creating table user in keyspace ${DATABASE_KEYSPACE}`);
     cassandraClient.execute(CREATE_USER_TABLE_QUERY, null, {
-      consistency: cassandra.types.consistencies.localQuorum,
+      consistency: cassandra.types.consistencies.quorum,
     });
     console.log(`Created table user in keyspace ${DATABASE_KEYSPACE}`);
 
     // Create todo table
     console.log(`Creating table todo in keyspace ${DATABASE_KEYSPACE}`);
     cassandraClient.execute(CREATE_TODO_TABLE_QUERY, null, {
-      consistency: cassandra.types.consistencies.localQuorum,
+      consistency: cassandra.types.consistencies.quorum,
     });
     console.log(`Created table todo in keyspace ${DATABASE_KEYSPACE}`);
   } catch (error) {

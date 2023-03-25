@@ -8,16 +8,16 @@ const GET_USER_QUERY = 'SELECT * FROM user WHERE email=?  ALLOW FILTERING'
 const IS_EMAIL_USED_QUERY = 'SELECT email FROM user WHERE email=? ALLOW FILTERING'
 
 module.exports.insertUser = async function insertUser(surname, lastname, email, password) {
-    return await cassandraClient.execute(INSERT_USER_QUERY, [surname, lastname, email, password], {consistency: cassandra.types.consistencies.localQuorum})
+    return await cassandraClient.execute(INSERT_USER_QUERY, [surname, lastname, email, password], {consistency: cassandra.types.consistencies.quorum})
 }
 
 module.exports.updateUser = async function updateUser(uuid, surname, lastname, email, password) {
-    return await cassandraClient.execute(UPDATE_USER_QUERY, [surname, lastname, email, password, uuid], {consistency: cassandra.types.consistencies.localQuorum})
+    return await cassandraClient.execute(UPDATE_USER_QUERY, [surname, lastname, email, password, uuid], {consistency: cassandra.types.consistencies.quorum})
 }
 
 module.exports.getUserById = async function getUserByUuid(uuid) {
     console.log("getUserById called with uuid = " + uuid)
-    return await cassandraClient.execute(GET_USER_BY_ID_QUERY, [uuid], {consistency: cassandra.types.consistencies.localQuorum})
+    return await cassandraClient.execute(GET_USER_BY_ID_QUERY, [uuid], {consistency: cassandra.types.consistencies.quorum})
         .then(
             result => {
                 return result.rows[0]
@@ -33,7 +33,7 @@ module.exports.getUserById = async function getUserByUuid(uuid) {
 
 module.exports.getUser = async function getUser(email) {
     console.log("getUser called with email = " + email)
-    return await cassandraClient.execute(GET_USER_QUERY, [email], {consistency: cassandra.types.consistencies.localQuorum})
+    return await cassandraClient.execute(GET_USER_QUERY, [email], {consistency: cassandra.types.consistencies.quorum})
         .then(
             result => {
                 return result.rows[0]
@@ -51,7 +51,7 @@ module.exports.userExists = async function isEmailUsed(email) {
     console.log("userExists called with email = " + email)
     return await cassandraClient.execute(IS_EMAIL_USED_QUERY, [email], {
         allowFiltering: true,
-        consistency: cassandra.types.consistencies.localQuorum
+        consistency: cassandra.types.consistencies.quorum
     })
         .then(
             result => {
