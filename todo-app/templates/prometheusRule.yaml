@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    field.cattle.io/description: 'Monitor HTTP request per minute '
+    prometheus-operator-validated: 'true'
+  name: monitorhttprequestperminute
+  namespace: todo-app
+spec:
+  groups:
+    - name: todoapp
+      interval: 0s
+      rules:
+        - alert: TooManyHttpRequests
+          annotations:
+            description: >-
+              "The instance {{ $labels.instance }} has a high rate of HTTP requests (> 10 req/min) for more than 10 minutes."
+            summary: Too many HTTP requests (instance {{ $labels.instance }})
+          expr: sum(increase(http_requests_per_minute[5m])) > 80
+          for: 0s
+          labels:
+            namespace: default
+            severity: critical
