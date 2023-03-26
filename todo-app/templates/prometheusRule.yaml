@@ -14,7 +14,7 @@ spec:
         - alert: TooManyHttpRequests
           annotations:
             description: >-
-              "The instance {{ $labels.instance }} has a high rate of HTTP requests (> 10 req/min) for more than 10 minutes."
+              "The instance {{ $labels.instance }} has a high rate of HTTP requests. 80 backend requests in less than 5 minutes"
             summary: Too many HTTP requests (instance {{ $labels.instance }})
           expr: sum(increase(http_requests_per_minute[5m])) > 80
           for: 0s
