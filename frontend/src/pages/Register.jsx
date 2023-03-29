@@ -4,7 +4,9 @@ import { useForm } from 'react-hook-form';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { register as signUp } from '../api/auth/authSlice';
+import { useSignUpMutation } from '../app/services/auth/authApi';
+
+import { signUpSuccess } from '../app/services/auth/authSlice';
 
 import Spinner from '../components/Spinner';
 
@@ -12,9 +14,9 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isLoading, isError, message } = useSelector(
-    (state) => state.auth
-  );
+  const [signUp, { isLoading }] = useSignUpMutation();
+
+  const { user } = useSelector((state) => state.auth);
 
   const defaultValues = {
     surname: 'John',
@@ -29,20 +31,20 @@ const Register = () => {
     // formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-
-    dispatch(signUp(data));
+  const onSubmit = async (signUpData) => {
+    try {
+      const data = await signUp(signUpData).unwrap();
+      dispatch(signUpSuccess(data));
+    } catch (error) {
+      toast.error(error.data.message);
+    }
   };
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
     if (user) {
       navigate('/');
     }
-  }, [user, isError, message, navigate, dispatch]);
+  }, [user, navigate, dispatch]);
 
   if (isLoading) {
     return <Spinner />;

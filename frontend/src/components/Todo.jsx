@@ -4,20 +4,26 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@heroicons/react/20/solid';
-import { useDispatch } from 'react-redux';
-import { deleteTodo } from '../api/todo/todoSlice';
+
 import { useState } from 'react';
 import Modal from './Modal';
-import { updateTodo } from '../api/todo/todoSlice';
+
+import Spinner from './Spinner';
+
+import {
+  useUpdateTodoMutation,
+  useDeleteTodoMutation,
+} from '../app/services/todo/todoApi';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 const Todo = ({ todo }) => {
-  const dispatch = useDispatch();
-
   let [isOpen, setIsOpen] = useState(false);
+
+  const [updateTodo, { isUpdateLoading }] = useUpdateTodoMutation();
+  const [deleteTodo, { isDeleteLoading }] = useDeleteTodoMutation();
 
   function closeModal() {
     setIsOpen(false);
@@ -29,9 +35,14 @@ const Todo = ({ todo }) => {
 
   const toggleOpenAndUpdate = () => {
     return () => {
-      dispatch(updateTodo({ ...todo, showDetails: !todo.showDetails }));
+      updateTodo({ ...todo, showDetails: !todo.showDetails });
+      // dispatch(updateTodo({ ...todo, showDetails: !todo.showDetails }));
     };
   };
+
+  if (isUpdateLoading || isDeleteLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="">
@@ -86,7 +97,8 @@ const Todo = ({ todo }) => {
                           className="rounded-full p-1.5 hover:bg-red-200 duration-100"
                           onClick={(e) => {
                             e.preventDefault();
-                            dispatch(deleteTodo(todo._id));
+                            deleteTodo(todo._id);
+                            // dispatch(deleteTodo(todo._id));
                           }}
                         >
                           <TrashIcon className="h-5 w-5 text-red-600" />

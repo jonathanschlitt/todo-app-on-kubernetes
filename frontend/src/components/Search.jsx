@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Modal from './Modal';
 import { useDispatch } from 'react-redux';
-import { searchTodos } from '../api/todo/todoSlice';
+import { searchTodos } from '../app/services/todo/todoSlice';
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -20,14 +20,12 @@ const Search = () => {
   const { register, handleSubmit, getValues } = useForm();
 
   const onSubmit = (data) => {
-    // console.log(JSON.stringify(data.search));
     dispatch(searchTodos(data.search));
   };
 
   const searchShowAll = () => {
     if (getValues('search') === '') {
       dispatch(searchTodos(''));
-    } else {
     }
   };
 

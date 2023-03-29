@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { logout } from '../api/auth/authSlice';
+import { logoutSuccess } from '../app/services/auth/authSlice';
 
 const Navigation = () => {
   const { user } = useSelector((state) => state.auth);
@@ -21,7 +21,7 @@ const Navigation = () => {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                dispatch(logout());
+                dispatch(logoutSuccess());
               }}
               className="text-green-50 text-lg sm:text-xl font-semibold hover:bg-green-400 duration-200 py-1 px-2 rounded-md"
             >

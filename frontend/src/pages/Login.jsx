@@ -4,17 +4,19 @@ import { useForm } from 'react-hook-form';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../api/auth/authSlice';
+// import { login } from '../api/auth/authSlice';
 
 import Spinner from '../components/Spinner';
+
+import { useLoginMutation } from '../app/services/auth/authApi';
+import { loginSuccess } from '../app/services/auth/authSlice';
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [login, { isLoginLoading }] = useLoginMutation();
 
-  const { user, isLoading, isError, message } = useSelector(
-    (state) => state.auth
-  );
+  const { user } = useSelector((state) => state.auth);
 
   const defaultValues = {
     email: 'test@todoapp.com',
@@ -27,22 +29,22 @@ const Login = () => {
     // formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-
-    dispatch(login(data));
+  const onSubmit = async (loginData) => {
+    try {
+      const data = await login(loginData).unwrap();
+      dispatch(loginSuccess(data));
+    } catch (error) {
+      toast.error(error.data.message);
+    }
   };
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
     if (user) {
       navigate('/');
     }
-  }, [user, isError, message, navigate, dispatch]);
+  }, [user, navigate, dispatch]);
 
-  if (isLoading) {
+  if (isLoginLoading) {
     return <Spinner />;
   }
 

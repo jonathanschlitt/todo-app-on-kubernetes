@@ -2,16 +2,20 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useDispatch } from 'react-redux';
-
-import { addTodo, updateTodo } from '../api/todo/todoSlice';
-
 import { toast } from 'react-hot-toast';
 
-const Modal = ({ isOpen, openModal, closeModal, update, todo }) => {
-  const dispatch = useDispatch();
+import Spinner from './Spinner';
 
+import {
+  useAddTodoMutation,
+  useUpdateTodoMutation,
+} from '../app/services/todo/todoApi';
+
+const Modal = ({ isOpen, closeModal, update, todo }) => {
   const defaultValues = update ? todo : {};
+
+  const [addTodo, { isLoading }] = useAddTodoMutation();
+  const [updateTodo, { isUpdateLoading }] = useUpdateTodoMutation();
 
   const {
     register,
@@ -20,21 +24,26 @@ const Modal = ({ isOpen, openModal, closeModal, update, todo }) => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    // console.log(data);
-    // dispatch(AddTodo(data))
+  const onSubmit = async (data) => {
     if (update) {
-      dispatch(updateTodo({ ...data, _id: todo._id }));
+      updateTodo({ ...data, _id: todo._id });
+      // dispatch(updateTodo({ ...data, _id: todo._id }));
       closeModal();
       reset();
       toast.success('Todo Item wurde erfolgreich geändert.');
     } else {
-      dispatch(addTodo(data));
+      addTodo(data);
+
+      // dispatch(addTodo(data));
       closeModal();
       reset();
       toast.success('Todo Item wurde erfolgreich erstellt.');
     }
   };
+
+  if (isLoading || isUpdateLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div>
